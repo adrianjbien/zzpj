@@ -17,12 +17,12 @@ public class PythonInterop {
                     from bs4 import BeautifulSoup
                     
                     base_urls = ["https://commerzbank-poland.breezy.hr", "https://voyagu.breezy.hr"
-                    , "https://upstars.breezy.hr/", "https://patrianna.breezy.hr/"]
+                    , "https://upstars.breezy.hr/", "https://patrianna.breezy.hr/", "https://medialicious.breezy.hr/"]
 
                     type_mapping = {
                         "%LABEL_POSITION_TYPE_FULL_TIME%": "Full Time",
                         "%LABEL_POSITION_TYPE_OTHER%": "Other",
-                        "%LABEL_POSITION_TYPE_PART_TIME%": "Part Time"
+                        "%LABEL_POSITION_TYPE_PART_TIME%": "Part Time",
                         "%LABEL_POSITION_TYPE_CONTRACT%" : "Contract"
                     }
 
