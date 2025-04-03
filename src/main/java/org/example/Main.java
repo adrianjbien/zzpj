@@ -5,11 +5,11 @@ import org.graalvm.polyglot.*;
 public class Main {
     public static void main(String[] args) {
         try (Context ctx = Context.newBuilder("python")
-                .option("python.PythonPath", "C:\\Users\\abien\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages") // <--- Ustaw właściwą ścieżkę!
+                .option("python.PythonPath", "packages/Lib/site-packages") // <--- Ustaw właściwą ścieżkę!
                 .allowAllAccess(true)
                 .build()) {
 
-            ctx.eval("python", "import os; os.system('graalpy -m pip install requests')");
+//            ctx.eval("python", "import os; os.system('graalpy -m pip install requests')");
             ctx.eval("python", "import requests; print('requests OK')");
         }
     }
