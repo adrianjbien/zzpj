@@ -17,7 +17,10 @@ public class PythonInterop {
                     from bs4 import BeautifulSoup
                     
                     base_urls = ["https://commerzbank-poland.breezy.hr", "https://voyagu.breezy.hr"
-                    , "https://upstars.breezy.hr/", "https://patrianna.breezy.hr/", "https://medialicious.breezy.hr/"]
+                                        , "https://upstars.breezy.hr/", "https://patrianna.breezy.hr/", "https://medialicious.breezy.hr/",
+                                        "https://lite-e-commerce.breezy.hr/", "https://lite-e-commerce.breezy.hr/"]
+                    
+                    base_urls = []
 
                     type_mapping = {
                         "%LABEL_POSITION_TYPE_FULL_TIME%": "Full Time",
@@ -48,12 +51,17 @@ public class PythonInterop {
 
                                 if response.status_code == 200:
                                     title = soup.find("h1").text.strip() if soup.find("h1") else "Not Found"
+                                    
+                                    description_div = soup.find("div", class_="description")
+                                    description = description_div.get_text().strip() if description_div else "Not Found"
 
                                     job_info = {
                                         "Title": title,
                                         "Location": get_info("location", soup),
                                         "Type": type_mapping.get(get_info("type", soup), get_info("type", soup)),
-                                        "Department": get_info("department", soup)
+                                        "Department": get_info("department", soup),
+                                        "Salary Range": get_info("salary", soup),
+                                        "Description": description,
                                     }
                                     job_list.append(job_info)
 
