@@ -20,7 +20,7 @@ public class PythonInterop {
                                         , "https://upstars.breezy.hr/", "https://patrianna.breezy.hr/", "https://medialicious.breezy.hr/",
                                         "https://lite-e-commerce.breezy.hr/", "https://lite-e-commerce.breezy.hr/"]
                     
-                    base_urls = []
+                    base_urls = ["https://commerzbank-poland.breezy.hr"]
 
                     type_mapping = {
                         "%LABEL_POSITION_TYPE_FULL_TIME%": "Full Time",
