@@ -1,5 +1,6 @@
 package org.example;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -48,10 +49,71 @@ public class Adzuna {
         }
     }
 
-    public String getJobs() {
-        String jsonResponse = getResponse("pl", 1);
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONArray resultsArray = jsonObject.getJSONArray("results");
-        return resultsArray.toString();
+    public String getITJobs(int pages) {
+        String[] countryCodes = new String[] {
+                "gb", "us", "at", "au", "be", "br", "ca", "ch", "de", "es", "fr",
+                "in", "it", "nl", "mx", "nz", "pl", "sg", "za"
+        };
+
+        JSONArray finalResults = new JSONArray();
+
+        for (String countryCode : countryCodes) {
+            for (int page = 1; page <= pages; page++) {
+                String jsonResponse = getResponse(countryCode, page);
+                if (jsonResponse == null) continue;
+
+                JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                if (!jsonObject.has("results")) continue;
+
+                JSONArray resultsArray = jsonObject.getJSONArray("results");
+
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject job = resultsArray.getJSONObject(i);
+
+                    JSONObject category = job.optJSONObject("category");
+                    String categoryLabel = category != null ? category.optString("label", "").toLowerCase() : "";
+                    String categoryTag = category != null ? category.optString("tag", "").toLowerCase() : "";
+
+                    boolean isIT = categoryLabel.contains("it")
+                            || categoryLabel.contains("tech")
+                            || categoryTag.contains("it")
+                            || categoryTag.contains("tech")
+                            || categoryTag.contains("developer")
+                            || categoryTag.contains("software")
+                            || categoryTag.contains("engineering");
+
+                    if (!isIT) continue;
+
+
+                    JSONObject simplifiedJob = new JSONObject();
+                    simplifiedJob.put("title", job.optString("title", "Not Found"));
+                    simplifiedJob.put("location", job.optJSONObject("location") != null
+                            ? job.getJSONObject("location").optString("display_name", "Not Found")
+                            : "Not Found");
+                    simplifiedJob.put("company", job.optJSONObject("company") != null
+                            ? job.getJSONObject("company").optString("display_name", "Not Found")
+                            : "Not Found");
+                    simplifiedJob.put("description", job.optString("description", "Not Found"));
+                    simplifiedJob.put("salary_min", job.opt("salary_min"));
+                    simplifiedJob.put("salary_max", job.opt("salary_max"));
+                    simplifiedJob.put("contract_type", job.optString("contract_type", "Not Found"));
+                    simplifiedJob.put("category_label", categoryLabel);
+                    simplifiedJob.put("category_tag", categoryTag);
+                    simplifiedJob.put("redirect_url", job.optString("redirect_url", ""));
+
+                    finalResults.put(simplifiedJob);
+                }
+            }
+        }
+
+        JsonFormatter formatter = new JsonFormatter();
+        try {
+            return formatter.getPrettyJson(finalResults.toString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to format JSON", e);
+        }
     }
+
+
 }

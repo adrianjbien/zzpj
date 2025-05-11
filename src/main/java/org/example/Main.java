@@ -6,6 +6,7 @@ public class Main {
 //        PythonInterop py = new PythonInterop();
 //        System.out.println(py.getPositions());
         Adzuna adzuna = new Adzuna();
-        System.out.println(adzuna.getJobs());
+        int pages = 2; // page consists of default 10 job offers
+        System.out.println(adzuna.getITJobs(pages));
     }
 }
