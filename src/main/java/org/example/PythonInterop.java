@@ -70,10 +70,8 @@ public class PythonInterop {
                     get_positions_json()
                     """);
 
-            ObjectMapper mapper = new ObjectMapper();
-            Object json = mapper.readValue(result.asString(), Object.class);
-            ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-            return writer.writeValueAsString(json);
+            JsonFormatter formatter = new JsonFormatter();
+            return formatter.getPrettyJson(result.asString());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

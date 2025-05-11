@@ -35,6 +35,11 @@
             <artifactId>deepl-java</artifactId>
             <version>1.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
     </dependencies>
 
 </project>
