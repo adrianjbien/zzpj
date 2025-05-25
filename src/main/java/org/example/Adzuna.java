@@ -49,16 +49,18 @@ public class Adzuna {
         }
     }
 
-    public String getITJobs(int pages) {
-        String[] countryCodes = new String[] {
-                "gb", "us", "at", "au", "be", "br", "ca", "ch", "de", "es", "fr",
-                "in", "it", "nl", "mx", "nz", "pl", "sg", "za"
+    public String getITJobs(int pages) throws JsonProcessingException {
+        var countryCodes = new String[] {
+                "us", "at", "au", "be", "br", "ca", "ch", "de", "es", "fr",
+                "in", "it", "nl", "mx", "nz", "pl", "sg", "za", "gb"
         };
+
+
 
         JSONArray finalResults = new JSONArray();
 
-        for (String countryCode : countryCodes) {
-            for (int page = 1; page <= pages; page++) {
+        for (var countryCode : countryCodes) {
+            for (var page = 1; page <= pages; page++) {
                 String jsonResponse = getResponse(countryCode, page);
                 if (jsonResponse == null) continue;
 
@@ -68,23 +70,16 @@ public class Adzuna {
 
                 JSONArray resultsArray = jsonObject.getJSONArray("results");
 
-                for (int i = 0; i < resultsArray.length(); i++) {
+                for (var i = 0; i < resultsArray.length(); i++) {
                     JSONObject job = resultsArray.getJSONObject(i);
 
                     JSONObject category = job.optJSONObject("category");
                     String categoryLabel = category != null ? category.optString("label", "").toLowerCase() : "";
                     String categoryTag = category != null ? category.optString("tag", "").toLowerCase() : "";
 
-                    boolean isIT = categoryLabel.contains("it")
-                            || categoryLabel.contains("tech")
-                            || categoryTag.contains("it")
-                            || categoryTag.contains("tech")
-                            || categoryTag.contains("developer")
-                            || categoryTag.contains("software")
-                            || categoryTag.contains("engineering");
+                    boolean isIT = JobUtils.isITJob(categoryLabel, categoryTag);
 
                     if (!isIT) continue;
-
 
                     JSONObject simplifiedJob = new JSONObject();
                     simplifiedJob.put("title", job.optString("title", "Not Found"));
